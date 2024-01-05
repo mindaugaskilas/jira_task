@@ -41,6 +41,7 @@ services:
       context: .
       dockerfile: docker/php/Dockerfile
     container_name: php
+    user: '1000:1000'
     volumes:
       - ./src:/var/www/html
     networks:
@@ -64,6 +65,17 @@ services:
     volumes:
       - ./src:/var/www/html
     working_dir: /var/www/html
-    command: sh -c "composer update"
     networks:
       - laravel
+#
+#  artisan:
+#    build:
+#      context: .
+#      dockerfile: docker/php/Dockerfile
+#    container_name: artisan
+#    volumes:
+#      - ./src:/var/www/html
+#    working_dir: /var/www/html
+#    entrypoint: [ 'php', 'artisan' ]
+#    networks:
+#      - laravel
