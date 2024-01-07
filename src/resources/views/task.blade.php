@@ -3,7 +3,9 @@
 
     <div class="scale-100 p-6 bg-white dark:bg-gray-800/50">
         <div>
-            <h1>Title: {{ $task->title }}</h1>
+            <p>Type: {{ $task->type }}</p>
+            <p>Status: {{ $task->status }}</p>
+            <p><b>Title: {{ $task->title }}</b></p>
             <p>Description: {{$task->description}}</p>
             <p>Creator: {{$task->creator}}</p>
             <p>Tester: {{$task->tester}}</p>
