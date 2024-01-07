@@ -2,8 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\RoleEnum;
+use App\Enums\StatusEnum;
+use App\Enums\TaskTypeEnum;
+use App\Helpers\CustomHelper;
+use App\Http\Requests\CreateTaskRequest;
 use App\Models\Comment;
 use App\Models\Task;
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class TaskController extends Controller
@@ -15,11 +22,71 @@ class TaskController extends Controller
         ]);
     }
 
+    public function create(): View
+    {
+        $users = User::all(['id', 'name', 'role'])->toArray();
+        $filteredExecutors = CustomHelper::filterByValue($users, RoleEnum::EXECUTOR->value, 'role');
+        $filteredTester = CustomHelper::filterByValue($users, RoleEnum::TESTER->value, 'role');
+
+        return view('task_form', [
+            'taskTypes' => TaskTypeEnum::values(),
+            'statuses' => StatusEnum::values(),
+            'creators' => CustomHelper::arrayToOptions($users, 'name', 'name'),
+            'executors' => CustomHelper::arrayToOptions($filteredExecutors, 'name', 'name'),
+            'testers' => CustomHelper::arrayToOptions($filteredTester, 'name', 'name'),
+        ]);
+    }
+
     public function show(int $id): View
     {
         return view('task', [
             'task' => Task::find($id),
             'comments' => Comment::where('task_id', $id)->get(),
         ]);
+    }
+
+    public function store(CreateTaskRequest $request): RedirectResponse
+    {
+        $task = new Task();
+        $this->fillValues($request, $task)->save();
+
+        return redirect()->route('task.list');
+    }
+
+    public function edit(int $taskId): View
+    {
+        $users = User::all(['id', 'name', 'role'])->toArray();
+        $filteredExecutors = CustomHelper::filterByValue($users, RoleEnum::EXECUTOR->value, 'role');
+        $filteredTester = CustomHelper::filterByValue($users, RoleEnum::TESTER->value, 'role');
+
+        return view('task_edit_form', [
+            'task' => Task::find($taskId),
+            'taskTypes' => TaskTypeEnum::values(),
+            'statuses' => StatusEnum::values(),
+            'creators' => CustomHelper::arrayToOptions($users, 'name', 'name'),
+            'executors' => CustomHelper::arrayToOptions($filteredExecutors, 'name', 'name'),
+            'testers' => CustomHelper::arrayToOptions($filteredTester, 'name', 'name'),
+        ]);
+    }
+
+    public function update(CreateTaskRequest $request, int $taskId): RedirectResponse
+    {
+        $task = Task::find($taskId);
+        $this->fillValues($request, $task)->save();
+
+        return redirect()->route('task.show', $taskId);
+    }
+
+    private function fillValues(CreateTaskRequest $request, Task $task): Task
+    {
+        $task->title = $request->title;
+        $task->description = $request->description;
+        $task->creator = $request->creator;
+        $task->tester = $request->tester;
+        $task->executor = $request->executor;
+        $task->type = TaskTypeEnum::from($request->type);
+        $task->status = StatusEnum::from($request->status);
+
+        return $task;
     }
 }

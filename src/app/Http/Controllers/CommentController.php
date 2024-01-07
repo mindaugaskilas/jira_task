@@ -2,64 +2,52 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateCommentRequest;
 use App\Models\Comment;
-use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function create(int $taskId): View
     {
-        //
+        $users = array_column(User::all(['id'])->toArray(), 'id');
+        $key = array_rand($users);
+        $userId = $users[$key];
+
+        return view('comment/comment_form', [
+            'user_id' => $userId,
+            'task_id' => $taskId,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(CreateCommentRequest $request, int $taskId): RedirectResponse
     {
-        //
+        $comment = new Comment();
+        $comment->comment = $request->comment;
+        $comment->user_id = (int) $request->user_id;
+        $comment->task_id = (int) $request->task_id;
+        $comment->save();
+
+        return redirect()->route('task.show', ['id' => $taskId]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function edit(int $taskId, int $commentId): View
     {
-        //
+        $comment = Comment::find($commentId);
+
+        return view('comment/comment_form_edit', [
+            'comment' => $comment,
+            'taskId' => $taskId,
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Comment $comment)
+    public function update(CreateCommentRequest $request, int $taskId, int $commentId): RedirectResponse
     {
-        //
-    }
+        $commentData = $request->all();
+        Comment::where('id', $commentId)->update(['comment' =>$commentData['comment']]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Comment $comment)
-    {
-        //
+        return redirect()->route('task.show', ['id' => $taskId]);
     }
 }
