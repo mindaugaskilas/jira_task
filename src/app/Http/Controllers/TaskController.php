@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActionEnum;
 use App\Enums\RoleEnum;
 use App\Enums\StatusEnum;
 use App\Enums\TaskTypeEnum;
+use App\Events\TaskChange;
 use App\Helpers\CustomHelper;
 use App\Http\Requests\CreateTaskRequest;
 use App\Models\Comment;
@@ -50,6 +52,8 @@ class TaskController extends Controller
         $task = new Task();
         $this->fillValues($request, $task)->save();
 
+        event(new TaskChange(ActionEnum::STORE, $task));
+
         return redirect()->route('task.list');
     }
 
@@ -71,8 +75,12 @@ class TaskController extends Controller
 
     public function update(CreateTaskRequest $request, int $taskId): RedirectResponse
     {
-        $task = Task::find($taskId);
-        $this->fillValues($request, $task)->save();
+        $dbTask = Task::find($taskId);
+        $dbTaskClone = clone $dbTask;
+        $newTask = $this->fillValues($request, $dbTask);
+        $newTask->save();
+
+        event(new TaskChange(ActionEnum::UPDATE, $dbTaskClone, $newTask));
 
         return redirect()->route('task.show', $taskId);
     }
