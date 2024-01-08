@@ -31,9 +31,9 @@ class TaskController extends Controller
         return view('task_form', [
             'taskTypes' => TaskTypeEnum::values(),
             'statuses' => StatusEnum::values(),
-            'creators' => CustomHelper::arrayToOptions($users, 'name', 'name'),
-            'executors' => CustomHelper::arrayToOptions($filteredExecutors, 'name', 'name'),
-            'testers' => CustomHelper::arrayToOptions($filteredTester, 'name', 'name'),
+            'creators' => CustomHelper::arrayToOptions($users, 'id', 'name'),
+            'executors' => CustomHelper::arrayToOptions($filteredExecutors, 'id', 'name'),
+            'testers' => CustomHelper::arrayToOptions($filteredTester, 'id', 'name'),
         ]);
     }
 
@@ -63,9 +63,9 @@ class TaskController extends Controller
             'task' => Task::find($taskId),
             'taskTypes' => TaskTypeEnum::values(),
             'statuses' => StatusEnum::values(),
-            'creators' => CustomHelper::arrayToOptions($users, 'name', 'name'),
-            'executors' => CustomHelper::arrayToOptions($filteredExecutors, 'name', 'name'),
-            'testers' => CustomHelper::arrayToOptions($filteredTester, 'name', 'name'),
+            'creators' => CustomHelper::arrayToOptions($users, 'id', 'name'),
+            'executors' => CustomHelper::arrayToOptions($filteredExecutors, 'id', 'name'),
+            'testers' => CustomHelper::arrayToOptions($filteredTester, 'id', 'name'),
         ]);
     }
 
@@ -81,9 +81,9 @@ class TaskController extends Controller
     {
         $task->title = $request->title;
         $task->description = $request->description;
-        $task->creator = $request->creator;
-        $task->tester = $request->tester;
-        $task->executor = $request->executor;
+        $task->creator_id = $request->creator;
+        $task->tester_id = $request->tester;
+        $task->executor_id = $request->executor;
         $task->type = TaskTypeEnum::from($request->type);
         $task->status = StatusEnum::from($request->status);
 

@@ -16,7 +16,7 @@ class TaskTableSeeder extends Seeder
     {
         Schema::disableForeignKeyConstraints();
 
-        DB::table('tasks')->delete();
+        DB::table('tasks')->truncate();
         Task::factory(10)->create();
 
         Schema::enableForeignKeyConstraints();

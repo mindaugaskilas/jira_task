@@ -43,7 +43,9 @@ services:
     container_name: php
     user: '1000:1000'
     volumes:
+#      - /var/www/html/vendor
       - ./src:/var/www/html
+#    command: "composer install && php artisan migrate"
     networks:
       - laravel
 
@@ -58,24 +60,3 @@ services:
       driver: none
     networks:
       - laravel
-
-  composer:
-    image: composer:latest
-    container_name: composer
-    volumes:
-      - ./src:/var/www/html
-    working_dir: /var/www/html
-    networks:
-      - laravel
-#
-#  artisan:
-#    build:
-#      context: .
-#      dockerfile: docker/php/Dockerfile
-#    container_name: artisan
-#    volumes:
-#      - ./src:/var/www/html
-#    working_dir: /var/www/html
-#    entrypoint: [ 'php', 'artisan' ]
-#    networks:
-#      - laravel

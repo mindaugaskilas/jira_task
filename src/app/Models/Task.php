@@ -6,6 +6,7 @@ use App\Enums\StatusEnum;
 use App\Enums\TaskTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 
 class Task extends Model
@@ -20,9 +21,9 @@ class Task extends Model
     protected $fillable = [
         'title',
         'description',
-        'creator',
-        'tester',
-        'executor',
+        'creator_id',
+        'tester_id',
+        'executor_id',
     ];
 
     /**
@@ -34,4 +35,19 @@ class Task extends Model
         'status' => StatusEnum::class,
         'type' => TaskTypeEnum::class,
     ];
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'creator_id');
+    }
+
+    public function tester(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'tester_id');
+    }
+
+    public function executor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'executor_id');
+    }
 }

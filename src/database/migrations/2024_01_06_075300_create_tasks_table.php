@@ -17,13 +17,20 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->longText('description');
-            $table->string('creator');
-            $table->string('tester');
-            $table->string('executor');
+            $table->unsignedBigInteger('creator_id');
+            $table->unsignedBigInteger('tester_id');
+            $table->unsignedBigInteger('executor_id');
             $table->string('status')->default(StatusEnum::WORKING->value);
             $table->string('type')->default(TaskTypeEnum::ISSUE->value);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
+
+            $table->foreign('creator_id')->references('id')
+                ->on('users');
+            $table->foreign('tester_id')->references('id')
+                ->on('users');
+            $table->foreign('executor_id')->references('id')
+                ->on('users');
         });
     }
 
