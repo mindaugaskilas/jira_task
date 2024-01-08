@@ -83,7 +83,6 @@ services:
     volumes:
       - ./src:/var/www/html
     working_dir: /var/www/html
-    tty: true
     depends_on:
       - mysql
       - php
