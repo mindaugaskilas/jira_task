@@ -11,9 +11,9 @@
             <p>Status: {{ $task->status }}</p>
             <p><b>Title: {{ $task->title }}</b></p>
             <p>Description: {{$task->description}}</p>
-            <p>Creator: {{$task->creator}}</p>
-            <p>Tester: {{$task->tester}}</p>
-            <p>Executor: {{$task->executor}}</p>
+            <p>Creator: {{$task->creator->name}}</p>
+            <p>Tester: {{$task->tester->name}}</p>
+            <p>Executor: {{$task->executor->name}}</p>
             <p>Updated: {{$task->updated_at}}</p>
             <p>Created: {{$task->created_at}}</p>
             <duv class="flex justify-center sm:items-center ">

@@ -6,7 +6,7 @@ class CustomHelper
 {
     public static function arrayToOptions(array $array, string $key, string $value): array
     {
-        return array_column($array, $key, $value);
+        return array_column($array, $value, $key);
     }
 
     public static function filterByValue(array $array, string $filteredValue, string $filteredKey): array

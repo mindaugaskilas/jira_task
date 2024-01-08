@@ -19,20 +19,20 @@
             <x-form-textarea class="{{$class}}" name="description" placeholder="Description" label="Description" :bind="$task" />
 
             <x-form-select class="{{$class}}" name="creator" label="Creator">
-                @foreach ($creators as $creator)
-                    <option value="{{$creator}}" {{$creator == $task->creator ? "selected" : ""}} >{{$creator}}</option>
+                @foreach ($creators as $key => $creator)
+                    <option value="{{$key}}" {{$key == $task->creator->id ? "selected" : ""}} >{{$creator}}</option>
                 @endforeach
             </x-form-select>
 
             <x-form-select class="{{$class}}" name="tester" label="Tester">
-                @foreach ($testers as $tester)
-                    <option value="{{$tester}}" {{$tester == $task->tester ? "selected" : ""}} >{{$tester}}</option>
+                @foreach ($testers as $key => $tester)
+                    <option value="{{$key}}" {{$key == $task->tester->id ? "selected" : ""}} >{{$tester}}</option>
                 @endforeach
             </x-form-select>
 
             <x-form-select class="{{$class}}" name="executor" label="Executor">
-                @foreach ($executors as $executor)
-                    <option value="{{$executor}}" {{$executor == $task->executor ? "selected" : ""}} >{{$executor}}</option>
+                @foreach ($executors as $key => $executor)
+                    <option value="{{$key}}" {{$key == $task->executor->id ? "selected" : ""}} >{{$executor}}</option>
                 @endforeach
             </x-form-select>
 
